@@ -1,0 +1,13 @@
+var 0..2: foo;
+var 0..1: left;
+var 0..1: right;
+var 0..2: shared;
+var 0..2: target;
+constraint foo in {1, 2};
+constraint target in {2};
+constraint foo = 2 -> (left in {1});
+constraint foo = 2 -> (right in {1});
+constraint left = 1 -> (shared in {1, 2});
+constraint right = 1 -> (shared in {1});
+constraint shared = 1 -> (target in {1});
+solve maximize foo;
