@@ -1,0 +1,2 @@
+ls -a p
+cd b k
