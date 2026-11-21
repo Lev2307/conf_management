@@ -1,5 +1,7 @@
 """Трансляция промежуточного представления в машинный код УВМ."""
 
+from opcodes import COMMAND_SIZE, OPCODE_BITS
+
 # Ширина поля A в битах и размер команды в байтах
 OPCODE_BITS = 3
 COMMAND_SIZE = 5

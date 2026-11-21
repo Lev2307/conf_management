@@ -1,34 +1,45 @@
-"""Ассемблер учебной виртуальной машины (УВМ). Вариант 1.
+"""УВМ (вариант 1): единая точка входа ассемблера и интерпретатора.
 
-Этап 1: разбор текстового представления программы (CSV)
-и трансляция в промежуточное представление.
-Этап 2: формирование машинного кода и запись в двоичный файл.
+Подкоманды:
+    assemble <исходник.csv> <результат.bin> [--test]
+    run <программа.bin> <дамп.xml> <начало> <конец>
 """
 
 import argparse
 
-from encoder import assemble, print_machine_code, write_binary
-from reader import parse_source
+from assembler import assemble_program
+from interpreter import interpret
+
+
+def build_parser():
+    """Создаёт парсер аргументов с подкомандами assemble и run."""
+    parser = argparse.ArgumentParser(
+        description='Ассемблер и интерпретатор УВМ (вариант 1)')
+    subparsers = parser.add_subparsers(dest='command', required=True)
+
+    asm = subparsers.add_parser('assemble', help='ассемблировать программу')
+    asm.add_argument('source', help='путь к исходному CSV-файлу')
+    asm.add_argument('output', help='путь к выходному двоичному файлу')
+    asm.add_argument('--test', action='store_true',
+                     help='вывести промежуточное и машинное представление')
+
+    run = subparsers.add_parser('run', help='исполнить программу')
+    run.add_argument('binary', help='путь к бинарному файлу программы')
+    run.add_argument('dump', help='путь к файлу дампа памяти (XML)')
+    run.add_argument('start', type=int, help='начальный адрес дампа')
+    run.add_argument('end', type=int,
+                     help='конечный адрес дампа, не включая')
+    return parser
+
 
 def main():
-    """Точка входа: аргументы командной строки и режим тестирования."""
-    parser = argparse.ArgumentParser(description='Ассемблер УВМ (вариант 1)')
-    parser.add_argument('source', help='путь к исходному CSV-файлу')
-    parser.add_argument('output', help='путь к выходному двоичному файлу')
-    parser.add_argument('--test', action='store_true',
-                        help='вывести промежуточное и машинное представление')
-    args = parser.parse_args()
+    """Разбирает аргументы и запускает нужную подкоманду."""
+    args = build_parser().parse_args()
+    if args.command == 'assemble':
+        assemble_program(args.source, args.output, args.test)
+    elif args.command == 'run':
+        interpret(args.binary, args.dump, args.start, args.end)
 
-    instructions = parse_source(args.source)
-    if args.test:
-        for instruction in instructions:
-            print(instruction.describe())
-
-    machine_code = assemble(instructions)
-    write_binary(args.output, machine_code)
-    print(f'Размер двоичного файла: {len(machine_code)} байт')
-    if args.test:
-        print_machine_code(instructions)
 
 if __name__ == '__main__':
     main()

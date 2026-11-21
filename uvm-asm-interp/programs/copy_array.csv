@@ -1,0 +1,30 @@
+# Исходный массив из 4 элементов по адресу 1000
+const, 1000
+const, 11
+store, 0
+const, 1004
+const, 22
+store, 0
+const, 1008
+const, 33
+store, 0
+const, 1012
+const, 44
+store, 0
+# Копирование массива из 1000 в 2000 (поэлементно)
+const, 2000
+const, 1000
+load, 0
+store, 0
+const, 2004
+const, 1004
+load, 0
+store, 0
+const, 2008
+const, 1008
+load, 0
+store, 0
+const, 2012
+const, 1012
+load, 0
+store, 0

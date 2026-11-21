@@ -1,9 +1,13 @@
-"""Коды команд УВМ (вариант 1).
+"""Коды команд и формат команды УВМ (вариант 1).
 
-Формат команды УВМ — 5 байт (little-endian):
+Команда кодируется 5 байтами (little-endian):
     биты 0-2  — код команды (поле A)
     биты 3-39 — операнд (поле B)
 """
+
+OPCODE_BITS = 3
+OPCODE_MASK = (1 << OPCODE_BITS) - 1
+COMMAND_SIZE = 5  # размер команды в байтах
 
 LOAD_CONST = 5  # загрузка константы на стек
 LOAD_MEM = 0    # чтение значения из памяти
@@ -17,3 +21,6 @@ OPCODES = {
     'store': STORE_MEM,
     'bswap': BSWAP_MEM,
 }
+
+# Код команды -> мнемоника (для декодирования)
+MNEMONICS = {code: name for name, code in OPCODES.items()}
